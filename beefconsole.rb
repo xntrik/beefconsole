@@ -5,6 +5,8 @@ $:.unshift(File.join(File.expand_path(File.dirname(__FILE__)), 'lib'))
 require 'optparse'
 require 'rubygems'
 
+$BeefVer = "0.1"
+
 class OptsConsole
 	def self.parse(args)
 		options = {}
@@ -54,7 +56,7 @@ require 'rex'
 require 'beef/ui'
 
 if (options['Version'])
-	$stderr.puts 'Version blah'
+	$stderr.puts "Version #{$BeefVer}"
 	exit
 end
 
