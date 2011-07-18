@@ -117,12 +117,31 @@ class Core
       when '-h'
         cmd_show_help
       when 'zombies'
-        #xntrik this is not working yet
-        CommandDispatcher::Remote.cmd_online
+        driver.run_single("online")
+      when 'browsers'
+        driver.run_single("online")
+      when 'commands'
+        if driver.dispatched_enstacked(Target)
+          driver.run_single("commands")
+        else
+          print_error("You aren't targeting a zombie yet")
+        end
       else
         print_error("Invalid parameter, try show -h for more information.")
       end
     }
+  end
+  
+  def cmd_show_tabs(str, words)
+    return [] if words.length > 1
+    
+    res = %w{zombies browsers}
+    
+    if driver.dispatched_enstacked(Target)
+      res << "commands"
+    end
+    
+    return res
   end
   
   def cmd_show_help

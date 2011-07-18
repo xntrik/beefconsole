@@ -26,10 +26,7 @@ class Driver < BeEF::Ui::Driver
 
 		require 'readline_compatible' if(not rl)
 
-		#histfile is cleaner in msf
 		super(prompt, prompt_char, File.expand_path("~/.beef/history"))
-
-		#self.disable_output = true #xntrik don't disable anything yet
 
 		input = Rex::Ui::Text::Input::Stdio.new
 		output = Rex::Ui::Text::Output::Stdio.new
@@ -42,9 +39,6 @@ class Driver < BeEF::Ui::Driver
 		enstack_dispatcher(CommandDispatcher::Core) #doing this now?
 		enstack_dispatcher(CommandDispatcher::Remote)
 
-		#register_event_handlers #xntrik - rfers to msf/ui/console/frameworkeventmanager
-
-		#self.disable_output = false #xntrik don't have to reenableo
 
 		@defanged = false
 		#self.command_passthru = true
@@ -77,6 +71,17 @@ class Driver < BeEF::Ui::Driver
 		#framework.events.on_ui_stop()
 		super
 	end
+	
+	#New method to determine if a particular command dispatcher it already .. enstacked .. gooood
+	def dispatched_enstacked(dispatcher)
+	  inst = dispatcher.new(self)
+	  self.dispatcher_stack.each { |disp|
+	    if (disp.name == inst.name)
+	      return true
+      end
+    }
+    return false
+  end
 
 protected
 
