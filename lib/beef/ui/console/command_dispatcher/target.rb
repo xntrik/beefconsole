@@ -24,12 +24,21 @@ class Target
   
   def cmd_commands
     cmds = driver.remotebeef.command.getcommands(driver.remotebeef.targetsession)
+    tbl = Rex::Ui::Text::Table.new(
+      'Columns' =>
+        [
+          'Id',
+          'Command'
+        ])
     cmds.each{ |x|
       #print_line(x['text'].sub(/\W\(\d.*/,""))
       x['children'].each{ |y|
-        print_line(x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")+" ("+y['id'].to_s+")")
+        tbl << [y['id'].to_s, x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")]
       }
     }
+    puts "\n"
+    puts "List of command modules for this target\n"
+    puts tbl.to_s + "\n"
   end
   
   def cmd_info

@@ -14,12 +14,13 @@ class Core
 	def commands
 		{
 			"?"		=> "Help menu",
-			"help"		=> "Help menu",
-			"version"	=> "Show the version",
-			"quit"		=> "Exit the console",
-			"exit"		=> "Exit the console",
 			"back"    => "Move back from the current context",
-			"jobs"    => "Print jobs",
+			"exit"		=> "Exit the console",
+			"help"		=> "Help menu",
+			"jobs"    => "Print jobs",	
+			"quit"		=> "Exit the console",
+			"show"    => "Displays 'zombies' or 'browsers' or 'commands'. (For those who prefer the MSF way)",
+			"version"	=> "Show the version",
 		}
 	end
 
@@ -49,7 +50,7 @@ class Core
 	alias cmd_quit cmd_exit
 
 	def cmd_version(*args)
-		ver = "blah"
+		ver = "Version #{$BeefVer}"
 
 		print_line(ver)
 		return true
@@ -106,6 +107,30 @@ class Core
       print_line(driver.remotebeef.jobs[k].jid.to_s + " - " + driver.remotebeef.jobs[k].name)
     }
     print_line
+  end
+  
+  def cmd_show(*args)
+    args << "-h" if (args.length == 0)
+    
+    args.each { |type|
+      case type
+      when '-h'
+        cmd_show_help
+      when 'zombies'
+        #xntrik this is not working yet
+        CommandDispatcher::Remote.cmd_online
+      else
+        print_error("Invalid parameter, try show -h for more information.")
+      end
+    }
+  end
+  
+  def cmd_show_help
+    global_opts = %w{zombies browsers}
+    print_status("Valid parameters for the \"show\" command are: #{global_opts.join(", ")}")
+    
+    target_opts = %w{commands}
+    print_status("If you're targeting a module, you can also specify: #{target_opts.join(", ")}")
   end
 end
 

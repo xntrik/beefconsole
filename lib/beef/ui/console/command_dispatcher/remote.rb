@@ -27,6 +27,19 @@ class Remote
     }
   end
   
+  def beef_logo_to_os(logo)
+	  case logo
+    when "mac.png"
+      hbos = "Mac OS X"
+    when "linux.png"
+      hbos = "Linux"
+    when "win.png"
+      hbos = "Microsoft Windows"
+    when "unknown.png"
+      hbos = "Unknown"
+    end
+  end
+  
   def cmd_connect(*args)
     if (args[0] == nil or args[0] == "-h" or args[0] == "--help")
       print_status("  Usage: connect <beef url> <username> <password>")
@@ -84,9 +97,20 @@ class Remote
     end
     
     hb = driver.remotebeef.zombiepoll.hooked
-    hb['hooked-browsers']['online'].each{|x|
-      print_status(x[0]+": "+x[1]['browser_icon']+" on "+x[1]['os_icon']+" in the domain: "+x[1]['domain']+" with the ip: "+x[1]['ip'])
+    tbl = Rex::Ui::Text::Table.new(
+      'Columns' => 
+        [
+          'Id',
+          'IP',
+          'OS'
+        ])
+    hb['hooked-browsers']['online'].each{ |x|
+      tbl << [x[0].to_s , x[1]['ip'].to_s, beef_logo_to_os(x[1]['os_icon'].to_s)]
     }
+    puts "\n"
+    puts "Currently hooked browsers within BeEF"
+    puts "\n"
+    puts tbl.to_s + "\n"
   end
   
   def cmd_target(*args)
