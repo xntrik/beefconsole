@@ -50,7 +50,8 @@ module Remote
       self.session.getjson("/ui/modules/commandmodule/commands.json",{"zombie_session"=>session.to_s,"command_module_id"=>self.cmd['id'],"nonce"=>self.session.nonce.to_s})
     end
     
-    def getindividualresponse() #CF TO DO
+    def getindividualresponse(cmdid)
+      self.session.getjson("/ui/modules/select/command_results.json",{"command_id"=>cmdid})
     end
     
     protected

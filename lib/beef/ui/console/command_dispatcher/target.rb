@@ -63,20 +63,24 @@ class Target
       print_status("  Usage: module <id> OR <modulename>")
       return
     end
-    
+    modid = nil
     #xntrik - this stuff isn't working yet
-    if args[0].to_s.match(/\d+/) != nil
+    if args[0] =~ /[0-9]+/
+      modid = args[0]
+    else
       cmds = driver.remotebeef.command.getcommands(driver.remotebeef.targetsession)
       cmds.each{ |x|
         x['children'].each{ |y|
-          if args[0] == x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")
-            driver.remotebeef.command.setmodule(y['id'])
+          if args[0].chomp == x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")
+            modid = y['id']
           end
         }
       }
-    else
-       driver.remotebeef.command.setmodule(args[0])
     end
+    
+    return if modid.nil?
+    
+    driver.remotebeef.command.setmodule(modid)
     
     driver.enstack_dispatcher(Module)
     

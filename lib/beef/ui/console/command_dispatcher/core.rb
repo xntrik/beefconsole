@@ -120,6 +120,8 @@ class Core
         driver.run_single("online")
       when 'browsers'
         driver.run_single("online")
+      when 'online'
+        driver.run_single("online")
       when 'commands'
         if driver.dispatched_enstacked(Target)
           driver.run_single("commands")
@@ -132,6 +134,12 @@ class Core
         else
           print_error("You aren't targeting a zombie yet")
         end
+      when 'modinfo'
+        if driver.dispatched_enstacked(Module)
+          driver.run_single("modinfo")
+        else
+          print_error("You haven't selected a command module yet")
+        end
       else
         print_error("Invalid parameter, try show -h for more information.")
       end
@@ -141,10 +149,14 @@ class Core
   def cmd_show_tabs(str, words)
     return [] if words.length > 1
     
-    res = %w{zombies browsers}
+    res = %w{zombies browsers online}
     
     if driver.dispatched_enstacked(Target)
       res.concat(%w{commands info})
+    end
+    
+    if driver.dispatched_enstacked(Module)
+      res.concat(%w{modinfo})
     end
     
     return res
