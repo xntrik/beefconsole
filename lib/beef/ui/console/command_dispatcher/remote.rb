@@ -21,6 +21,7 @@ class Remote
       "connect"     => "Connect to a remote BeEF instance",
       "status"      => "Check the status of the connection",
       "disconnect"  => "Disconnect from the remote BeEF instance",
+      "offline"     => "List previously hooked browsers",
       "online"      => "List online hooked browsers",
       "target"      => "Target a particular hooked browser",
       "onlinepoll"        => "Start a background job to poll for online hooked browsers",
@@ -111,6 +112,30 @@ class Remote
     puts "Currently hooked browsers within BeEF"
     puts "\n"
     puts tbl.to_s + "\n"
+  end
+  
+  def cmd_offline(*args)
+    if driver.remotebeef.session.connected.nil?
+      print_status("You don't appear to be connected, try \"connect\" first")
+      return
+    end
+    
+    hb = driver.remotebeef.zombiepoll.hooked
+    tbl = Rex::Ui::Text::Table.new(
+      'Columns' => 
+        [
+          'Id',
+          'IP',
+          'OS'
+        ])
+    hb['hooked-browsers']['offline'].each{ |x|
+      tbl << [x[0].to_s , x[1]['ip'].to_s, beef_logo_to_os(x[1]['os_icon'].to_s)]
+    }
+    puts "\n"
+    puts "Previously hooked browsers within BeEF"
+    puts "\n"
+    puts tbl.to_s + "\n"
+    
   end
   
   def cmd_target(*args)

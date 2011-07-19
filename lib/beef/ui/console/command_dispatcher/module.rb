@@ -49,7 +49,8 @@ class Module
         print_line(resp['creationdate'] + " - " + resp['object_id'].to_s)
       end
     else
-      print_line(driver.remotebeef.command.getindividualresponse(args[0])['results']) #XNTRIK THIS IS NOT WORKING YET
+      output = driver.remotebeef.command.getindividualresponse(args[0])
+      puts output.class
     end
   end
   
