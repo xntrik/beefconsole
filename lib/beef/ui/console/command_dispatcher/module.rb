@@ -43,9 +43,13 @@ class Module
     end
   end
   
-  def cmd_response
-    driver.remotebeef.command.getcmdresponses(driver.remotebeef.targetsession)['commands'].each do |resp|
-      print_line(resp['creationdate'])
+  def cmd_response(*args)
+    if args[0] == nil
+      driver.remotebeef.command.getcmdresponses(driver.remotebeef.targetsession)['commands'].each do |resp|
+        print_line(resp['creationdate'] + " - " + resp['object_id'].to_s)
+      end
+    else
+      print_line(driver.remotebeef.command.getindividualresponse(args[0])['results']) #XNTRIK THIS IS NOT WORKING YET
     end
   end
   
