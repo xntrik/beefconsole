@@ -126,6 +126,12 @@ class Core
         else
           print_error("You aren't targeting a zombie yet")
         end
+      when 'info'
+        if driver.dispatched_enstacked(Target)
+          driver.run_single("info")
+        else
+          print_error("You aren't targeting a zombie yet")
+        end
       else
         print_error("Invalid parameter, try show -h for more information.")
       end
@@ -138,7 +144,7 @@ class Core
     res = %w{zombies browsers}
     
     if driver.dispatched_enstacked(Target)
-      res << "commands"
+      res.concat(%w{commands info})
     end
     
     return res
