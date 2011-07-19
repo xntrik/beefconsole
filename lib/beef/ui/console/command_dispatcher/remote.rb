@@ -136,7 +136,6 @@ class Remote
     puts "Previously hooked browsers within BeEF"
     puts "\n"
     puts tbl.to_s + "\n"
-    
   end
   
   def cmd_target(*args)
