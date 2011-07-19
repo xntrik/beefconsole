@@ -23,7 +23,8 @@ class Remote
       "disconnect"  => "Disconnect from the remote BeEF instance",
       "offline"     => "List previously hooked browsers",
       "online"      => "List online hooked browsers",
-      "target"      => "Target a particular hooked browser",
+      "review"      => "Target a particular previously hooked (offline) hooked browser",
+      "target"      => "Target a particular online hooked browser",
       "onlinepoll"        => "Start a background job to poll for online hooked browsers",
     }
   end
@@ -164,6 +165,33 @@ class Remote
     
     driver.update_prompt("(%bld%red"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] ")
     
+  end
+  
+  def cmd_review(*args)
+    if driver.remotebeef.session.connected.nil?
+      print_status("You don't appear to be connected, try \"connect\" first")
+      return
+    end
+    
+    if (args[0] == nil)
+      print_status("  Usage: review <id>")
+      return
+    end
+    
+    driver.remotebeef.setofflinetarget(args[0])
+    
+    if (driver.dispatcher_stack.size > 1 and
+	      driver.current_dispatcher.name != 'Core' and
+	      driver.current_dispatcher.name != 'Remote Control')
+
+	      driver.destack_dispatcher
+
+	      driver.update_prompt('')
+    end
+    
+    driver.enstack_dispatcher(Target)
+    
+    driver.update_prompt("(%bld%red(OFFLINE)"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] ")    
   end
   
   def cmd_onlinepoll
