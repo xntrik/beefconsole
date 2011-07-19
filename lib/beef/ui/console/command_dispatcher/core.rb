@@ -122,6 +122,8 @@ class Core
         driver.run_single("online")
       when 'online'
         driver.run_single("online")
+      when 'offline'
+        driver.run_single("offline")
       when 'commands'
         if driver.dispatched_enstacked(Target)
           driver.run_single("commands")
