@@ -151,7 +151,7 @@ class Core
   def cmd_show_tabs(str, words)
     return [] if words.length > 1
     
-    res = %w{zombies browsers online offline}
+    res = %w{zombies browsers online offline}    
     
     if driver.dispatched_enstacked(Target)
       res.concat(%w{commands info})
