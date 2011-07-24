@@ -64,7 +64,7 @@ class Target
       return
     end
     modid = nil
-    #xntrik - this stuff isn't working yet
+    
     if args[0] =~ /[0-9]+/
       modid = args[0]
     else
@@ -82,7 +82,7 @@ class Target
     
     driver.remotebeef.command.setmodule(modid)
     
-    driver.enstack_dispatcher(Module)
+    driver.enstack_dispatcher(Module) if driver.dispatched_enstacked(Module) == false
     
     driver.update_prompt("(%bld%red"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] / "+driver.remotebeef.command.cmd['Name']+" ")
     
