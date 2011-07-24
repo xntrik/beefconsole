@@ -37,7 +37,16 @@ module Remote
     end
     
     def runmodule(session)
-      resp = self.session.getraw("/ui/modules/commandmodule/new", {"zombie_session"=>session.to_s,"command_module_id"=>self.cmd['id'],"nonce"=>self.session.nonce.to_s})
+      options = {}
+      options.store("zombie_session", session.to_s)
+      options.store("command_module_id", self.cmd['id'])
+      options.store("nonce",self.session.nonce.to_s)
+      
+      self.cmd['Data'].each do |key,value|
+        options.store("txt_"+key.to_s,value)
+      end
+      
+      resp = self.session.getraw("/ui/modules/commandmodule/new", options)
       if resp.body == "{success : true}"
         ret = "true"
       else
@@ -51,7 +60,11 @@ module Remote
     end
     
     def getindividualresponse(cmdid)
-      self.session.getjson("/ui/modules/select/command_results.json",{"command_id"=>cmdid})
+      begin
+        return self.session.getjson("/ui/modules/select/command_results.json",{"command_id"=>cmdid})
+      rescue
+        return nil
+      end
     end
     
     protected

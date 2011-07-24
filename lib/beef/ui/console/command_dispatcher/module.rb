@@ -44,13 +44,29 @@ class Module
   end
   
   def cmd_response(*args)
+    if args[0] == "-h"
+      cmd_response_help
+      return
+    end
+    
     if args[0] == nil
+      tbl = Rex::Ui::Text::Table.new(
+        'Columns' =>
+          [
+            'Id',
+            'Date'
+          ])
       driver.remotebeef.command.getcmdresponses(driver.remotebeef.targetsession)['commands'].each do |resp|
-        print_line(resp['creationdate'] + " - " + resp['object_id'].to_s)
+        tbl << [resp['object_id'].to_s,resp['creationdate']]
       end
+      puts "\n"
+      puts "List of responses for this command module\n"
+      puts tbl.to_s + "\n"
     else
       output = driver.remotebeef.command.getindividualresponse(args[0])
-      if output['results'].length == 0
+      if output == nil
+        print_line("Invalid response ID")
+      elsif output['results'].length == 0
         print_line("No response yet from the hooked browser")
       else
         print_line("Results retrieved: " + Time.at(output['results'][0]['date'].to_i).to_s)
@@ -59,6 +75,11 @@ class Module
         print_line(output['results'][0]['data']['data'].to_s)
       end
     end
+  end
+  
+  def cmd_response_help
+    print_line("Usage: response (id)")
+    print_line("If you omit id you'll see a list of all responses for the currently active command module")
   end
   
   def cmd_go
