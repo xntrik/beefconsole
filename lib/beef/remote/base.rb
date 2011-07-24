@@ -25,7 +25,7 @@ module Remote
     
     def setofflinetarget(id)
       self.targetsession = self.zombiepoll.getofflinesession(id)
-      self.targetip = self.zombiepoll.getofflineip(id)
+      self.targetip = "(OFFLINE) " + self.zombiepoll.getofflineip(id)
       self.target = id
     end
     

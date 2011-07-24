@@ -50,7 +50,14 @@ class Module
       end
     else
       output = driver.remotebeef.command.getindividualresponse(args[0])
-      puts output.class
+      if output['results'].length == 0
+        print_line("No response yet from the hooked browser")
+      else
+        print_line("Results retrieved: " + Time.at(output['results'][0]['date'].to_i).to_s)
+        print_line("")
+        print_line("Response:")
+        print_line(output['results'][0]['data']['data'].to_s)
+      end
     end
   end
   

@@ -20,7 +20,7 @@ class Target
     {
       "commands" => "List available commands against this particular target",
       "info" => "Info about the target",
-      "module" => "Prepare the command module for execution against this target",
+      "select" => "Prepare the command module for execution against this target"
     }
   end
   
@@ -53,7 +53,7 @@ class Target
     }
   end
   
-  def cmd_module(*args)
+  def cmd_select(*args)
     if driver.remotebeef.session.connected.nil?
       print_status("You don't appear to be connected, try \"connect\" first")
       return
@@ -88,7 +88,7 @@ class Target
     
   end
   
-  def cmd_module_tabs(str,words)
+  def cmd_select_tabs(str,words)
     return if words.length > 1
     
     if @@modules == ""

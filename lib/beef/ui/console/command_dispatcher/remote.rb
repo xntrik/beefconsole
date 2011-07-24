@@ -190,7 +190,7 @@ class Remote
     
     driver.enstack_dispatcher(Target)
     
-    driver.update_prompt("(%bld%red(OFFLINE)"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] ")    
+    driver.update_prompt("(%bld%red"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] ")    
   end
   
   def cmd_onlinepoll
