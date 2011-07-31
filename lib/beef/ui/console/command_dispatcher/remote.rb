@@ -44,12 +44,13 @@ class Remote
   
   def cmd_connect(*args)
     if (args[0] == nil or args[0] == "-h" or args[0] == "--help")
-      print_status("  Usage: connect <beef url> <username> <password>")
-      print_status("Examples:")
-      print_status("  connect http://127.0.0.1:3000 beef beef")
+      cmd_connect_help
       return
     end
-    
+    if args.length != 3
+      cmd_connect_help
+      return
+    end
     if (driver.remotebeef.session.authenticate(args[0], args[1],args[2]).nil?)
       #For some reason, the first attempt always fails, lets sleep for a couple of secs and try again
       select(nil,nil,nil,2)
@@ -63,6 +64,12 @@ class Remote
     end
   end
   
+  def cmd_connect_help
+    print_status("  Usage: connect <beef url> <username> <password>")
+    print_status("Examples:")
+    print_status("  connect http://127.0.0.1:3000 beef beef")
+  end
+  
   def cmd_status(*args)
     begin
       if driver.remotebeef.session.connected
@@ -73,6 +80,10 @@ class Remote
     rescue
       print_status("You are not connected")
     end
+  end
+  
+  def cmd_status_help
+    print_status("Show your online status")
   end
   
   def cmd_disconnect(*args)
@@ -90,6 +101,10 @@ class Remote
     rescue
       print_status("You weren't even connected in the first place d'uh")
     end
+  end
+  
+  def cmd_disconnect_help
+    print_status("Disconnect from the remote BeEF instance")
   end
   
   def cmd_online(*args)
@@ -115,6 +130,10 @@ class Remote
     puts tbl.to_s + "\n"
   end
   
+  def cmd_online_help
+    print_status("Show currently hooked browsers within BeEF")
+  end
+  
   def cmd_offline(*args)
     if driver.remotebeef.session.connected.nil?
       print_status("You don't appear to be connected, try \"connect\" first")
@@ -138,14 +157,18 @@ class Remote
     puts tbl.to_s + "\n"
   end
   
+  def cmd_offline_help
+    print_status("Show previously hooked browsers")
+  end
+  
   def cmd_target(*args)
     if driver.remotebeef.session.connected.nil?
       print_status("You don't appear to be connected, try \"connect\" first")
       return
     end
     
-    if (args[0] == nil)
-      print_status("  Usage: target <id>")
+    if (args[0] == nil or args[0] == "-h")
+      cmd_target_help
       return
     end
     
@@ -166,14 +189,19 @@ class Remote
     
   end
   
+  def cmd_target_help
+    print_status("Target a selected online hooked browser")
+    print_status("  Usage: target <id>")
+  end
+  
   def cmd_review(*args)
     if driver.remotebeef.session.connected.nil?
       print_status("You don't appear to be connected, try \"connect\" first")
       return
     end
     
-    if (args[0] == nil)
-      print_status("  Usage: review <id>")
+    if (args[0] == nil or args[0] == "-h")
+      cmd_review_help
       return
     end
     
@@ -193,13 +221,21 @@ class Remote
     driver.update_prompt("(%bld%red"+driver.remotebeef.targetip+"%clr) ["+driver.remotebeef.target.to_s+"] ")    
   end
   
+  def cmd_review_help
+    print_status("Review a previously hooked browser (an offline browser)")
+    print_status("  Usage: review <id>")
+  end
+  
   def cmd_onlinepoll
     driver.remotebeef.jobs.start_bg_job(
       "OnlinePoller",
       driver.output,
       Proc.new { |ctx_| driver.remotebeef.zombiepoll.hookedpoll(ctx_) }
     )
-    #driver.remotebeef.zombiepoll.hookedpoll
+  end
+  
+  def cmd_onlinepoll_help
+    print_status("Kick off a background job to notify if you browsers hook or unhook")
   end
   
 end

@@ -54,10 +54,18 @@ class Module
         'Columns' =>
           [
             'Id',
-            'Date'
+            'Executed Time',
+            'Response Time'
           ])
       driver.remotebeef.command.getcmdresponses(driver.remotebeef.targetsession)['commands'].each do |resp|
-        tbl << [resp['object_id'].to_s,resp['creationdate']]
+        indiresp = driver.remotebeef.command.getindividualresponse(resp['object_id'])
+        respout = ""
+        if indiresp['results'].length == 0 or indiresp == nil
+          respout = "No response yet"
+        else
+          respout = Time.at(indiresp['results'][0]['date'].to_i).to_s
+        end
+        tbl << [resp['object_id'].to_s,resp['creationdate'],respout]
       end
       puts "\n"
       puts "List of responses for this command module\n"

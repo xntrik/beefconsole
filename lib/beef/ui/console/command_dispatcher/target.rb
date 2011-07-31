@@ -30,12 +30,13 @@ class Target
       'Columns' =>
         [
           'Id',
-          'Command'
+          'Command',
+          'Execute Count'
         ])
     cmds.each{ |x|
       #print_line(x['text'].sub(/\W\(\d.*/,""))
       x['children'].each{ |y|
-        tbl << [y['id'].to_s, x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")]
+        tbl << [y['id'].to_s, x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_"),driver.remotebeef.command.getcmdexeccount(driver.remotebeef.targetsession,y['id'])]
         @@modules << x['text'].sub(/\W\(\d.*/,"")+"/"+y['text'].gsub(/[-\(\)]/,"").gsub(/\W+/,"_")
       }
     }

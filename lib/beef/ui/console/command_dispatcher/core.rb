@@ -46,7 +46,12 @@ class Core
 
 		driver.stop
 	end
+	
+	def cmd_exit_help
+	  print_status("Quit the BeEF Console")
+  end
 
+  alias cmd_quit_help cmd_exit_help
 	alias cmd_quit cmd_exit
 
 	def cmd_version(*args)
@@ -69,6 +74,10 @@ class Core
 	      
 	      driver.update_prompt('')
     end
+  end
+  
+  def cmd_back_help
+    print_status("Move back one step")
   end
   
   def cmd_jobs(*args)
@@ -103,10 +112,17 @@ class Core
   end
   
   def cmd_jobs_list
+    tbl = Rex::Ui::Text::Table.new(
+      'Columns' =>
+        [
+          'Id',
+          'Job Name'
+        ])
     driver.remotebeef.jobs.keys.each{|k|
-      print_line(driver.remotebeef.jobs[k].jid.to_s + " - " + driver.remotebeef.jobs[k].name)
+      tbl << [driver.remotebeef.jobs[k].jid.to_s, driver.remotebeef.jobs[k].name]
     }
-    print_line
+    puts "\n"
+    puts tbl.to_s + "\n"
   end
   
   def cmd_show(*args)
