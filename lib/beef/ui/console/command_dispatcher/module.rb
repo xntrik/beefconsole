@@ -30,7 +30,7 @@ class Module
     print_line("Module parameters:")
     
     driver.remotebeef.command.cmd['Data'].each{|data|
-      print_line(data['name'] + " => " + data['value'] + " # this is the " + data['ui_label'] + " parameter")
+      print_line(data['name'] + " => \"" + data['value'] + "\" # this is the " + data['ui_label'] + " parameter")
     } if not driver.remotebeef.command.cmd['Data'].nil?
   end
   
@@ -39,7 +39,12 @@ class Module
       print_status("  Usage: param <paramname> <paramvalue>")
       return
     else
-      driver.remotebeef.command.setparam(args[0],args[1])
+      p = ""
+      (1..args.length-1).each do |x|
+        p << args[x] << " "
+      end
+      p.chop!
+      driver.remotebeef.command.setparam(args[0],p)
     end
   end
   
